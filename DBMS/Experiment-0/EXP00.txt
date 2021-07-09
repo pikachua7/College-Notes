@@ -1,0 +1,151 @@
+					*** EXPERIMENT NO: 00 ***
+-------------------------------------------------------------------------------
+					Author : Atharva Paliwal
+					Roll No : 40 [5B]
+					Date : 01-August-2020
+-------------------------------------------------------------------------------
+
+*******************************************************************************
+
+AIM: To create a two-relation database and execute queries against it.
+
+PROBLEM STATEMENT: Consider the conceptual and the logical schemata for the 
+				   Citizen Database.
+			PERSON(AadharNo, FName, LName, Gender, BirthDate, PinCode, Email)
+			CONTACT(AadharNo, Phone ) 
+
+*******************************************************************************
+
+SQL> connect CS540/atharva
+Connected.
+
+*************************************************************************************
+
+QUERY 01: Create the relations PERSON and CONTACT with specified constraints.
+
+************************************************************************************* 
+SQL> CREATE TABLE PERSON (
+  2  AADHAR_NO NUMBER(12) NOT NULL,
+  3  FIRST_NAME VARCHAR2(15) NOT NULL,
+  4  LAST_NAME VARCHAR2(15) NOT NULL,
+  5  GENDER VARCHAR2(1) NOT NULL CHECK (GENDER IN('M','F','m','f')),
+  6  BIRTHDATE DATE DEFAULT SYSDATE-(365*16)NOT NULL,
+  7  PINCODE NUMBER(6) NOT NULL,
+  8  EMAIL VARCHAR2(35),
+  9  CONSTRAINT PERSON_PK PRIMARY KEY (AADHAR_NO)
+ 10  );
+
+Table created.
+
+
+SQL> CREATE TABLE CONTACT(
+  2  AADHAR_NO NUMBER(12) NOT NULL,
+  3  PHONE NUMBER(10) NOT NULL,
+  4  CONSTRAINT CONTACT_PK  PRIMARY KEY (AADHAR_NO,PHONE),
+  5  CONSTRAINT CONTACT_FK FOREIGN KEY (AADHAR_NO) REFERENCES PERSON(AADHAR_NO)
+  6  );
+
+Table created.
+
+
+
+*************************************************************************************
+
+QUERY 02: List the primary key constraints for the Citizen Database. Your output must
+includetable name, constraint name, constraint type and table owner.
+
+************************************************************************************* 
+
+
+SQL> SELECT TABLE_NAME , CONSTRAINT_NAME , CONSTRAINT_TYPE , OWNER
+  2  FROM USER_CONSTRAINTS
+  3  WHERE CONSTRAINT_TYPE='P' AND TABLE_NAME IN ('PERSON','CONTACT');
+
+TABLE_NAME      CONSTRAINT_NAME           C        OWNER                       
+------------  ------------------------    -      ------------
+
+CONTACT          CONTACT_PK               P        CS540
+
+PERSON           PERSON_PK                P        CS540
+
+
+*************************************************************************************
+
+QUERY 06: List the first name, last name, gender, pincode and email for all persons.
+
+************************************************************************************* 
+
+
+SQL> SELECT FIRST_NAME,LAST_NAME,GENDER,PINCODE,EMAIL FROM PERSON;
+
+FIRST_NAME       LAST_NAME       G    PINCODE        EMAIL
+------------- ---------------    -  ----------  -------------------
+ATHARVA          PALIWAL         M     440024   paliwalap@rknec.edu
+ISHIKA           PALIWAL         F     440024   paliwalip@rknec.edu
+NEETA            PALIWAL         F     440024   paliwalnp@rknec.edu
+GAURAV           PALIWAL         M     440024   paliwalgp@rknec.edu
+TEJAS            PALIWAL         M     440024   paliwaltp@rknec.edu
+
+
+*************************************************************************************
+
+QUERY 07: List the person name and phone numbers for the person with name as that of
+yours.
+
+************************************************************************************* 
+
+SQL> SELECT FIRST_NAME,LAST_NAME,PHONE
+  2  FROM PERSON,CONTACT WHERE FIRST_NAME='ATHARVA' AND PERSON.AADHAR_NO=CONTACT.AADHAR_NO;
+
+FIRST_NAME      LAST_NAME            PHONE
+--------------- --------------- ----------
+ATHARVA         PALIWAL         7218385709
+ATHARVA         PALIWAL         8087992547
+
+
+*************************************************************************************
+
+QUERY 08: List the contact numbers for your family.
+
+************************************************************************************* 
+
+
+SQL> SELECT FIRST_NAME,PHONE FROM PERSON,CONTACT
+  2  WHERE LAST_NAME='PALIWAL' AND PERSON.AADHAR_NO=CONTACT.AADHAR_NO;
+
+FIRST_NAME           PHONE
+--------------- ----------
+ISHIKA          9988776633
+ATHARVA         7218385709
+ATHARVA         8087992547
+NEETA           7020396354
+GAURAV          1234567879
+TEJAS           9421365497
+
+6 rows selected.
+
+
+*************************************************************************************
+
+QUERY 09: List the persons (i.e., last name, first name) whose contact is the
+mentioned phonenumber.
+
+************************************************************************************* 
+
+SQL> SELECT FIRST_NAME,LAST_NAME
+  2  FROM PERSON,CONTACT
+  3  WHERE PHONE=7218385709 AND PERSON.AADHAR_NO=CONTACT.AADHAR_NO;
+
+FIRST_NAME       LAST_NAME
+-------------  ---------------
+ATHARVA          PALIWAL
+
+
+
+
+
+SQL> COMMIT;
+Commit complete.
+
+
+********************* ************* E N D ************* ********************* 

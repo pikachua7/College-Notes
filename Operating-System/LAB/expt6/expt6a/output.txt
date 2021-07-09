@@ -1,0 +1,4 @@
+Addition =3
+Subtraction =-1
+Multiplication=2
+Division=0

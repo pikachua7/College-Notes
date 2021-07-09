@@ -1,0 +1,19 @@
+Atharva Informatica Male 9.1 CSE 1400000.0 paliwalap@rknec.edu 9809101421 
+Rishikesh Informatica Male 9.4 CSE 60000.0 kale@rknec.edu 9851407159
+Rohit Infosys Male 8.4 EC 800000.0 chandani@rknec.edu 952502339252 
+Rahul Wipro Male 9.6 CSE 700000.0 agrawal@rknec.edu 083 8835605442 
+Riya Infosys Female 8.7 IT 1400000.0 riya@rknec.edu 9893674960 
+Monica TCS Female 9.9 IT 300000.0 monica@rknec.edu 9899625904
+Anjali TCS Male 9.7 CSE 700000.0 rajendran@rknec.edu 8879917599
+Simran Infosys Female 9.2 CSE 600000.0 baheti@rknec.edu 8289563742 
+Ankita Wipro TCS Female 8.9 EC 600000.0 ankita@rknec.edu 8356145169 
+Ayushi Infosys Female 9.4 CSE 200000.0 ayushi@rknec.edu 9328571185 
+Riddhi Informatica Female 6.4 CSE 900000.0 lele@rknec.edu 9028422193 
+Muskan Infosys Female 8.5 EC 1700000.0 gupta@rknec.edu 8432104405 
+Keshubh Wipro Male 9.8 IT 400000.0 sharma@rknec.edu 9060213371
+Gaurav Infosys Male 9.4 CSE 200000.0 shukla@rknec.edu 9767840563
+Ritik Accenture Male 7.1 EC 800000.0 parashar@rknec.edu 1009520064 
+Yaman Accenture Male 9.9 IT 1700000.0 kushwaha@rknec.edu 9861889583 
+Nikhil Wipro Male 9.2 CSE 900000.0 tiwari@rknec.edu 8671206472 
+Yash Informatica Male 8.4 EC 1400000.0 roy@rknec.edu 9692086015 
+Paritosh Wipro Male 9.5 CSE 100000.0 dandekar@rknec.edu 8954205715

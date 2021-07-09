@@ -1,0 +1,237 @@
+/*
+Script Name: "salesco.sql"
+=========================
+    This script establishes the database for experiments in course named - Database Management Systems Lab [CSP351] of Fifth Semester B. E. [CSE] at RCOEM Nagpur.
+    
+    AUTHOR      : PROF. D. A. BORIKAR
+    AFFILIATION : CSE, RCOEM NAGPUR
+    DATE WRITTEN: 27-JUL-2020
+    
+NOTE: Strictly for use within RCOEM Nagpur for CSP351. Not to be circulated or forwarded further.
+
+*/
+
+REM CONFIGURING SALESCO DATABASE
+
+SET ECHO OFF
+SET FEEDBACK OFF
+SET VERIFY OFF
+SET PAGESIZE 25
+SET LINESIZE 80
+
+DROP TABLE CUSTOMER CASCADE CONSTRAINTS PURGE;
+DROP TABLE VENDOR CASCADE CONSTRAINTS PURGE;
+DROP TABLE LINE CASCADE CONSTRAINTS PURGE;
+DROP TABLE PRODUCT CASCADE CONSTRAINTS PURGE;
+DROP TABLE INVOICE CASCADE CONSTRAINTS PURGE;
+
+CLEAR SCR;
+PROMPT
+PROMPT
+PROMPT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PROMPT |                                                                             |
+PROMPT |            DATABASE MANAGEMENT SYSTEMS LAB [CSP351] [2020-2021]             |
+PROMPT |                                                                             |
+PROMPT |                        SALESCO SCHEMA ESTABLISHMENT                         |
+PROMPT |                                                                             |
+PROMPT |                                                   BY: PROF. D. A. BORIKAR   |
+PROMPT |                                                                             |
+PROMPT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PROMPT                                                                              
+PROMPT  ~~~  SALESCO SCHEMA IS BEING ESTABLISHED ... PLEASE WAIT...        
+PROMPT             
+
+CREATE TABLE CUSTOMER(
+    C_CODE		NUMBER(5)		NOT NULL, 
+    LNAME		VARCHAR2(10)	NOT NULL,
+    FNAME		VARCHAR2(10)	NOT NULL,
+    C_AREA		NUMBER(3)		NOT NULL,
+    C_PHONE 	NUMBER(7)		NOT NULL,
+    BALANCE		NUMBER(7,2)	    DEFAULT 0   NOT NULL,
+    CONSTRAINT CUSTOMER_PK_C_CODE PRIMARY KEY (C_CODE),
+    CONSTRAINT CUSTOMER_CK_C_CODE CHECK (C_CODE >= 10010),
+    CONSTRAINT CUSTOMER_CK_C_AREA CHECK (C_AREA BETWEEN 501 AND 999)
+);
+
+CREATE TABLE INVOICE(
+    INV_NUM		NUMBER(4)		NOT NULL,
+    C_CODE		NUMBER(5)		NOT NULL,
+    INV_DATE	DATE			NOT NULL,
+    CONSTRAINT INVOICE_PK_INV_NUM PRIMARY KEY (INV_NUM),
+    CONSTRAINT INVOICE_CK_INV_NUM CHECK (INV_NUM >= 1001),
+    CONSTRAINT INVOICE_CUSTOMER_FK_C_CODE FOREIGN KEY (C_CODE) REFERENCES CUSTOMER(C_CODE)
+);
+
+CREATE TABLE VENDOR(
+    V_CODE		NUMBER(5)		NOT NULL, 
+    V_NAME		VARCHAR2(30)	NOT NULL,
+    V_CONTACT	VARCHAR2(20)	NOT NULL,
+    V_AREA		NUMBER(3)		NOT NULL,
+    V_PHONE		NUMBER(7)		NOT NULL,
+    V_STATE		CHAR(2)		    NOT NULL,
+    V_ORDER		CHAR(1)		    DEFAULT 'N' NOT NULL,
+    CONSTRAINT VENDOR_PK_V_CODE PRIMARY KEY (V_CODE),
+    CONSTRAINT VENDOR_CK_V_CODE CHECK (V_CODE > 21000),
+    CONSTRAINT VENDOR_CK_V_AREA CHECK (V_AREA BETWEEN 501 AND 999),
+    CONSTRAINT VENDOR_CK_V_STATE CHECK (V_STATE IN ('TN','FL','KY','GA'))    
+);
+
+CREATE TABLE PRODUCT(
+    P_CODE		CHAR(5)		    NOT NULL,
+    DESCRIPT	VARCHAR2(30)	NOT NULL,
+    P_DATE		DATE			NOT NULL,
+    QTY			NUMBER(4)		NOT NULL,
+    P_MIN		NUMBER(3)		NOT NULL,	
+    P_PRICE		NUMBER(6,2)		NOT NULL,
+    P_DISC		NUMBER(2,2)		DEFAULT 0   NOT NULL,
+    V_CODE		NUMBER(5),		-- NOT NULL if every product has a supplier
+    CONSTRAINT PRODUCT_PK_P_CODE PRIMARY KEY (P_CODE),
+    CONSTRAINT PRODUCT_CK_P_MIN CHECK (P_MIN < QTY),
+    CONSTRAINT PRODUCT_VENDOR_FK_V_CODE FOREIGN KEY (V_CODE) REFERENCES VENDOR(V_CODE)
+);   
+
+CREATE TABLE LINE(
+    INV_NUM		NUMBER(4)		NOT NULL,
+    L_NUM		NUMBER(1)		NOT NULL,
+    P_CODE		CHAR(5)		    NOT NULL,
+    L_UNITS		NUMBER(3)		NOT NULL,
+    L_PRICE		NUMBER(5,2)		NOT NULL,
+    CONSTRAINT LINE_PK_INV_NUM_L_NUM PRIMARY KEY (INV_NUM, L_NUM),
+    CONSTRAINT LINE_INVOICE_FK_INV_NUM FOREIGN KEY (INV_NUM) REFERENCES INVOICE(INV_NUM),
+    CONSTRAINT LINE_CK_L_NUM CHECK (L_NUM > 0),
+    CONSTRAINT LINE_PRODUCT_FK_P_CODE FOREIGN KEY (P_CODE) REFERENCES PRODUCT(P_CODE),
+    CONSTRAINT LINE_CK_L_UNITS CHECK (L_UNITS > 0),
+    CONSTRAINT LINE_CK_L_PRICE CHECK (L_PRICE > 0)
+);
+
+PROMPT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PROMPT |                                                                             |
+PROMPT |                        SALESCO SCHEMA ESTABLISHED                           |
+PROMPT |                                                                             |
+PROMPT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PROMPT
+PROMPT
+
+PAUSE DATABASE WILL BE POPULATED NOW. PRESS ANY KEY TO PROCEED.
+
+REM POPULATING SALESCO DATABASE
+CLEAR SCR;
+
+PROMPT
+PROMPT
+PROMPT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PROMPT |                                                                             |
+PROMPT |                   DATABASE MANAGEMENT SYSTEMS LAB [CSP321]                  |
+PROMPT |                                                                             |
+PROMPT |                        POPULATING THE SALESCO SCHEMA                        |
+PROMPT |                                                                             |
+PROMPT |                                                   BY: PROF. D. A. BORIKAR   |
+PROMPT |                                                                             |
+PROMPT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PROMPT                                                                              
+PROMPT  ~~~  SALESCO SCHEMA IS BEING POPULATED ... PLEASE WAIT...        
+PROMPT             
+  
+
+REM POPULATING CUSTOMER TABLE
+    INSERT INTO CUSTOMER VALUES(10010,'Anderson','James',615,2933893,0.00);
+    INSERT INTO CUSTOMER VALUES(10011,'Johnson','Elena',713,2753455,0.00);
+    INSERT INTO CUSTOMER VALUES(10012,'Smith','Kathy',615,2873453,345.86);
+    INSERT INTO CUSTOMER VALUES(10013,'Paul','Chris',615,2879998,536.75);
+    INSERT INTO CUSTOMER VALUES(10014,'Johnson','Bill',615,2455533,0.00);
+    INSERT INTO CUSTOMER VALUES(10015,'Samuels','Julia',713,2345432,0.00);
+    INSERT INTO CUSTOMER VALUES(10016,'Harris','Anne',615,2233445,221.19);
+    INSERT INTO CUSTOMER VALUES(10017,'Ford','Gustav',615,2223444,768.93);
+    INSERT INTO CUSTOMER VALUES(10018,'Lee','Ming',713,2323234,216.55);
+    INSERT INTO CUSTOMER VALUES(10019,'Green','Walter',615,2786403,0.00);
+COMMIT;
+
+REM POPULATING INVOICE TABLE
+    INSERT INTO INVOICE VALUES(1001,10014,'16-JAN-20');
+    INSERT INTO INVOICE VALUES(1002,10011,'16-JAN-20');
+    INSERT INTO INVOICE VALUES(1003,10012,'16-JAN-20');
+    INSERT INTO INVOICE VALUES(1004,10018,'17-JAN-20');
+    INSERT INTO INVOICE VALUES(1005,10011,'17-JAN-20');
+    INSERT INTO INVOICE VALUES(1006,10014,'17-JAN-20');
+    INSERT INTO INVOICE VALUES(1007,10015,'17-JAN-20');
+    INSERT INTO INVOICE VALUES(1008,10011,'17-JAN-20');
+COMMIT;
+
+REM POPULATING VENDOR TABLE
+    INSERT INTO VENDOR VALUES(21225,'Bryson, Inc.','Bella Ford',615,2453628,'TN','Y');
+    INSERT INTO VENDOR VALUES(21226,'SuperLoo, Inc.','Ching Ming',904,3876330,'FL','N');
+    INSERT INTO VENDOR VALUES(21231,'GnB Supply','Ted Jones',615,2889922,'TN','Y');
+    INSERT INTO VENDOR VALUES(21344,'Gomez Sons','Mark Welder',615,2986363,'KY','N');
+    INSERT INTO VENDOR VALUES(22587,'Downing, Inc.','Simon Singh',901,3985333,'GA','N');
+    INSERT INTO VENDOR VALUES(23119,'Blackman Sisters','Svetlana Han',901,3562429,'GA','Y');
+    INSERT INTO VENDOR VALUES(24004,'Almeda House','Almeda Brown',615,2787878,'TN','N');
+    INSERT INTO VENDOR VALUES(24288,'Justin Stores','Gracy Yu',615,2543333,'TN','Y');
+    INSERT INTO VENDOR VALUES(25443,'Super Systems','Ted Hwang',904,3561111,'FL','N');
+    INSERT INTO VENDOR VALUES(25501,'Silvermines Ltd.','Anne White',615,2983455,'TN','N');
+    INSERT INTO VENDOR VALUES(25595,'HighEnd Supplies','Smith Rust',904,3098773,'FL','Y');
+COMMIT;
+
+REM POPULATING PRODUCT TABLE
+    INSERT INTO PRODUCT VALUES('AB112','Power Drill','03-NOV-19',8,5,109.99,0,25595);
+    INSERT INTO PRODUCT VALUES('SB725','7.25in Saw Blade','13-DEC-19',32,15,14.99,0.05,21344);
+    INSERT INTO PRODUCT VALUES('SB900','9.00 in Saw Blade','13-NOV-19',18,12,17.49,0,21344);
+    INSERT INTO PRODUCT VALUES('CL025','Hrd. Spring 1/4in','15-JAN-20',15,8,39.95,0,23119);
+    INSERT INTO PRODUCT VALUES('CL050','Hrd. Spring 1/2in','15-JAN-20',23,5,43.99,0,23119);
+    INSERT INTO PRODUCT VALUES('JB012','Jigsaw 12in Blade','30-DEC-19',8,5,109.92,0.05,24288);
+    INSERT INTO PRODUCT VALUES('JB008','Jigsaw 8in Blade','24-DEC-19',6,5,99.87,0.05,24288);
+    INSERT INTO PRODUCT VALUES('CD00X','Cordless Drill','20-JAN-20',12,5,38.95,0.05,25595);
+    INSERT INTO PRODUCT VALUES('CH10X','Claw Hammer','20-JAN-20',23,10,9.95,0.10,21225);
+    INSERT INTO PRODUCT VALUES('SH100','Sledge Hammer','02-JAN-20',8,5,14.40,0.05,NULL);
+    INSERT INTO PRODUCT VALUES('RF100','Rat Tail File','15-DEC-19',43,20,4.99,0,21344);
+    INSERT INTO PRODUCT VALUES('HC100','Hicut Chain Saw','07-FEB-20',11,5,256.99,0.05,24288);
+    INSERT INTO PRODUCT VALUES('PP101','PVC Pipe','20-FEB-20',188,75,5.87,0,NULL);
+    INSERT INTO PRODUCT VALUES('MC001','Metal Screw','01-MAR-20',172,75,6.99,0,21225);
+    INSERT INTO PRODUCT VALUES('WC025','2.5in wide Screw','24-FEB-20',237,100,8.45,0,21231);
+    INSERT INTO PRODUCT VALUES('SM48X','Steel Malting Mesh','17-JAN-20',18,5,119.95,0.10,25595);
+COMMIT;
+
+REM POPULATING LINE TABLE
+    INSERT INTO LINE VALUES(1001,1,'SB725',1,14.99);
+    INSERT INTO LINE VALUES(1001,2,'CH10X',1,9.95);
+    INSERT INTO LINE VALUES(1002,1,'RF100',2,4.99);
+    INSERT INTO LINE VALUES(1003,1,'CD00X',1,38.95);
+    INSERT INTO LINE VALUES(1003,2,'CD00X',1,39.95);
+    INSERT INTO LINE VALUES(1003,3,'SB725',5,14.99);
+    INSERT INTO LINE VALUES(1004,1,'RF100',3,4.99);
+    INSERT INTO LINE VALUES(1004,2,'CH10X',2,9.95);
+    INSERT INTO LINE VALUES(1005,1,'PP101',12,5.87);
+    INSERT INTO LINE VALUES(1006,1,'MC001',3,6.99);
+    INSERT INTO LINE VALUES(1006,2,'JB012',1,109.92);
+    INSERT INTO LINE VALUES(1006,3,'CH10X',1,9.95);
+    INSERT INTO LINE VALUES(1006,4,'HC100',1,256.99);
+    INSERT INTO LINE VALUES(1007,1,'SB725',2,14.99);
+    INSERT INTO LINE VALUES(1007,2,'RF100',1,4.99);
+    INSERT INTO LINE VALUES(1008,1,'PP101',5,5.87);
+    INSERT INTO LINE VALUES(1008,2,'SM48X',3,119.95);
+    INSERT INTO LINE VALUES(1008,3,'CH10X',1,9.95);
+COMMIT;
+
+PROMPT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PROMPT |                                                                             |
+PROMPT |                        SALESCO SCHEMA IS UP FOR USE                         |
+PROMPT |                                                                             |
+PROMPT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+PROMPT
+PROMPT
+
+PAUSE PRESS ANY KEY TO CONTINUE.
+
+CLEAR SCR;
+
+PROMPT DATABASE CONTAINS..
+PROMPT
+
+SELECT COUNT(*) "Customer#" FROM CUSTOMER;
+SELECT COUNT(*) "Invoice#" FROM INVOICE;
+SELECT COUNT(*) "Vendor#" FROM VENDOR;
+SELECT COUNT(*) "Product#" FROM PRODUCT;
+SELECT COUNT(*) "Line#" FROM LINE;
+
+SET FEEDBACK ON
+SET VERIFY ON
+SET ECHO ON 

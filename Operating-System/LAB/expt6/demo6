@@ -1,0 +1,121 @@
+srcoem@opop:~/atharva$ cd /
+srcoem@opop:/$ free -g
+              total        used        free      shared  buff/cache   available
+Mem:              3           1           0           0           1           1
+Swap:             1           0           1
+srcoem@opop:/$ free -m
+              total        used        free      shared  buff/cache   available
+Mem:           3815        1434         929         256        1451        1898
+Swap:          2047           0        2047
+srcoem@opop:/$ free -k
+              total        used        free      shared  buff/cache   available
+Mem:        3907536     1469596      951584      262468     1486356     1944004
+Swap:       2097148           0     2097148
+srcoem@opop:/$ ls
+bin    dev   initrd.img      lib64       mnt   root  snap      sys  var
+boot   etc   initrd.img.old  lost+found  opt   run   srv       tmp  vmlinuz
+cdrom  home  lib             media       proc  sbin  swapfile  usr  vmlinuz.old
+srcoem@opop:/$ cd mnt
+srcoem@opop:/mnt$ ls
+ramdisk
+srcoem@opop:/mnt$ sudo mkdir ramdisk1
+[sudo] password for srcoem: 
+srcoem@opop:/mnt$ ls
+ramdisk  ramdisk1
+srcoem@opop:/mnt$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+udev            1.9G     0  1.9G   0% /dev
+tmpfs           382M  1.8M  380M   1% /run
+/dev/sda5        74G  9.5G   61G  14% /
+tmpfs           1.9G   28M  1.9G   2% /dev/shm
+tmpfs           5.0M  4.0K  5.0M   1% /run/lock
+tmpfs           1.9G     0  1.9G   0% /sys/fs/cgroup
+/dev/loop0      1.0M  1.0M     0 100% /snap/gnome-logs/81
+/dev/loop3      141M  141M     0 100% /snap/gnome-3-26-1604/98
+/dev/loop2      3.8M  3.8M     0 100% /snap/gnome-system-monitor/123
+/dev/loop6      4.3M  4.3M     0 100% /snap/gnome-calculator/544
+/dev/loop4       15M   15M     0 100% /snap/gnome-logs/37
+/dev/loop5      141M  141M     0 100% /snap/gnome-3-26-1604/70
+/dev/loop7       45M   45M     0 100% /snap/gtk-common-themes/1440
+/dev/loop8       15M   15M     0 100% /snap/gnome-characters/399
+/dev/loop1       15M   15M     0 100% /snap/gnome-characters/375
+/dev/loop9      161M  161M     0 100% /snap/gnome-3-28-1804/116
+/dev/loop11      90M   90M     0 100% /snap/core/8268
+/dev/loop12     3.8M  3.8M     0 100% /snap/gnome-system-monitor/127
+/dev/loop13      45M   45M     0 100% /snap/gtk-common-themes/1353
+/dev/loop10      55M   55M     0 100% /snap/core18/1650
+/dev/loop14     157M  157M     0 100% /snap/gnome-3-28-1804/110
+/dev/loop15     2.4M  2.4M     0 100% /snap/gnome-calculator/180
+/dev/loop17      55M   55M     0 100% /snap/core18/1668
+tmpfs           382M   16K  382M   1% /run/user/121
+tmpfs           382M   40K  382M   1% /run/user/1000
+/dev/sdb1        15G   13G  1.9G  88% /media/srcoem/REMOVABLE D
+/dev/loop18      92M   92M     0 100% /snap/core/8689
+srcoem@opop:/mnt$ sudo mount -t tmpfs -o size=512m tmpfs /mnt/ramdisk1
+srcoem@opop:/mnt$ ls
+ramdisk  ramdisk1
+srcoem@opop:/mnt$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+udev            1.9G     0  1.9G   0% /dev
+tmpfs           382M  1.8M  380M   1% /run
+/dev/sda5        74G  9.5G   61G  14% /
+tmpfs           1.9G   28M  1.9G   2% /dev/shm
+tmpfs           5.0M  4.0K  5.0M   1% /run/lock
+tmpfs           1.9G     0  1.9G   0% /sys/fs/cgroup
+/dev/loop0      1.0M  1.0M     0 100% /snap/gnome-logs/81
+/dev/loop3      141M  141M     0 100% /snap/gnome-3-26-1604/98
+/dev/loop2      3.8M  3.8M     0 100% /snap/gnome-system-monitor/123
+/dev/loop6      4.3M  4.3M     0 100% /snap/gnome-calculator/544
+/dev/loop4       15M   15M     0 100% /snap/gnome-logs/37
+/dev/loop5      141M  141M     0 100% /snap/gnome-3-26-1604/70
+/dev/loop7       45M   45M     0 100% /snap/gtk-common-themes/1440
+/dev/loop8       15M   15M     0 100% /snap/gnome-characters/399
+/dev/loop1       15M   15M     0 100% /snap/gnome-characters/375
+/dev/loop9      161M  161M     0 100% /snap/gnome-3-28-1804/116
+/dev/loop11      90M   90M     0 100% /snap/core/8268
+/dev/loop12     3.8M  3.8M     0 100% /snap/gnome-system-monitor/127
+/dev/loop13      45M   45M     0 100% /snap/gtk-common-themes/1353
+/dev/loop10      55M   55M     0 100% /snap/core18/1650
+/dev/loop14     157M  157M     0 100% /snap/gnome-3-28-1804/110
+/dev/loop15     2.4M  2.4M     0 100% /snap/gnome-calculator/180
+/dev/loop17      55M   55M     0 100% /snap/core18/1668
+tmpfs           382M   16K  382M   1% /run/user/121
+tmpfs           382M   40K  382M   1% /run/user/1000
+/dev/sdb1        15G   13G  1.9G  88% /media/srcoem/REMOVABLE D
+/dev/loop18      92M   92M     0 100% /snap/core/8689
+tmpfs           512M     0  512M   0% /mnt/ramdisk1
+srcoem@opop:/mnt$ sudo unmount ramdisk1
+sudo: unmount: command not found
+srcoem@opop:/mnt$ sudo umount ramdisk1
+srcoem@opop:/mnt$ ls
+ramdisk  ramdisk1
+srcoem@opop:/mnt$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+udev            1.9G     0  1.9G   0% /dev
+tmpfs           382M  1.8M  380M   1% /run
+/dev/sda5        74G  9.5G   61G  14% /
+tmpfs           1.9G   28M  1.9G   2% /dev/shm
+tmpfs           5.0M  4.0K  5.0M   1% /run/lock
+tmpfs           1.9G     0  1.9G   0% /sys/fs/cgroup
+/dev/loop0      1.0M  1.0M     0 100% /snap/gnome-logs/81
+/dev/loop3      141M  141M     0 100% /snap/gnome-3-26-1604/98
+/dev/loop2      3.8M  3.8M     0 100% /snap/gnome-system-monitor/123
+/dev/loop6      4.3M  4.3M     0 100% /snap/gnome-calculator/544
+/dev/loop4       15M   15M     0 100% /snap/gnome-logs/37
+/dev/loop5      141M  141M     0 100% /snap/gnome-3-26-1604/70
+/dev/loop7       45M   45M     0 100% /snap/gtk-common-themes/1440
+/dev/loop8       15M   15M     0 100% /snap/gnome-characters/399
+/dev/loop1       15M   15M     0 100% /snap/gnome-characters/375
+/dev/loop9      161M  161M     0 100% /snap/gnome-3-28-1804/116
+/dev/loop11      90M   90M     0 100% /snap/core/8268
+/dev/loop12     3.8M  3.8M     0 100% /snap/gnome-system-monitor/127
+/dev/loop13      45M   45M     0 100% /snap/gtk-common-themes/1353
+/dev/loop10      55M   55M     0 100% /snap/core18/1650
+/dev/loop14     157M  157M     0 100% /snap/gnome-3-28-1804/110
+/dev/loop15     2.4M  2.4M     0 100% /snap/gnome-calculator/180
+/dev/loop17      55M   55M     0 100% /snap/core18/1668
+tmpfs           382M   16K  382M   1% /run/user/121
+tmpfs           382M   40K  382M   1% /run/user/1000
+/dev/sdb1        15G   13G  1.9G  88% /media/srcoem/REMOVABLE D
+/dev/loop18      92M   92M     0 100% /snap/core/8689
+

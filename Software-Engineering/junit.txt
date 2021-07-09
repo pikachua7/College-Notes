@@ -1,0 +1,10 @@
+Step 1 - Eclipse install
+Step 2 - https://github.com/junit-team/junit4/wiki/Download-and-Install   ->>  download both jar from here after clicking -> junit.jar hamcrest-core.jar
+Step 3 - Made a folder in C:/Junit and placed jar files there
+Step 4 - Go to Eclipse , right click on any java project created 
+and then got to 
+->Build Path-> Configure Build Path ->Libraries -> In ClassPath -> Add External Jar (select both the jar files) then Apply and Close
+Step 5 - Add @Test annotation and hover on it and the import the Test Condition
+Step 6 - Right click on file and Run as ->Junit test
+
+Done!!

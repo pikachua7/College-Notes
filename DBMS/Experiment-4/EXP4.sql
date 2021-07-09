@@ -1,0 +1,909 @@
+/*QUERY-1*/
+CREATE TABLE PART (
+	PT_CODE VARCHAR(10) NOT NULL,
+	PT_DESC VARCHAR(20) NOT NULL,
+	PT_PRICE NUMBER(10) NOT NULL,
+	S_CODE VARCHAR(10) 
+);
+
+/*Table created.*/
+
+INSERT INTO PART(PT_CODE, PT_DESC, PT_PRICE, S_CODE)
+SELECT P_CODE, DESCRIPT, P_PRICE, V_CODE
+FROM PRODUCT;
+
+
+19 rows created.
+
+SELECT * FROM PART;
+
+/*PT_CODE    PT_DESC                PT_PRICE S_CODE
+---------- -------------------- ---------- ----------
+AB111      POWER DRILL                 125 24992
+PP102      PVC PIPE                     15 24992
+AB112      Power Drill                 110 25595
+SB725      7.25in Saw Blade             15 21344
+SB900      9.00 in Saw Blade            17 21344
+CL025      Hrd. Spring 1/4in            40 23119
+CL050      Hrd. Spring 1/2in            44 23119
+JB012      Jigsaw 12in Blade           110 24288
+JB008      Jigsaw 8in Blade            100 24288
+CD00X      Cordless Drill               39 25595
+CH10X      Claw Hammer                  10 21225
+
+PT_CODE    PT_DESC                PT_PRICE S_CODE
+---------- -------------------- ---------- ----------
+SH100      Sledge Hammer                14
+RF100      Rat Tail File                 5 21344
+HC100      Hicut Chain Saw             257 24288
+PP101      PVC Pipe                      6
+MC001      Metal Screw                   7 21225
+WC025      2.5in wide Screw              8 21231
+SM48X      Steel Malting Mesh          120 25595
+HW15X      HIVELD HAMMER                16 24992
+
+19 rows selected.*/
+
+SELECT TABLE_NAME,CONSTRAINT_NAME,CONSTRAINT_TYPE,OWNER
+  FROM USER_CONSTRAINTS
+  WHERE TABLE_NAME IN('PART','PRODUCT');
+
+/*TABLE_NAME                     CONSTRAINT_NAME                C
+------------------------------ ------------------------------ -
+OWNER
+------------------------------
+PART                           SYS_C0011757                   C
+CS540
+
+PART                           SYS_C0011758                   C
+CS540
+
+PART                           SYS_C0011759                   C
+CS540
+
+
+TABLE_NAME                     CONSTRAINT_NAME                C
+------------------------------ ------------------------------ -
+OWNER
+------------------------------
+PRODUCT                        PRODUCT_VENDOR_FK_V_CODE       R
+CS540
+
+PRODUCT                        SYS_C0011556                   C
+CS540
+
+PRODUCT                        SYS_C0011557                   C
+CS540
+
+
+TABLE_NAME                     CONSTRAINT_NAME                C
+------------------------------ ------------------------------ -
+OWNER
+------------------------------
+PRODUCT                        SYS_C0011558                   C
+CS540
+
+PRODUCT                        SYS_C0011559                   C
+CS540
+
+PRODUCT                        SYS_C0011560                   C
+CS540
+
+
+TABLE_NAME                     CONSTRAINT_NAME                C
+------------------------------ ------------------------------ -
+OWNER
+------------------------------
+PRODUCT                        SYS_C0011561                   C
+CS540
+
+PRODUCT                        SYS_C0011562                   C
+CS540
+
+PRODUCT                        PRODUCT_CK_P_MIN               C
+CS540
+
+
+TABLE_NAME                     CONSTRAINT_NAME                C
+------------------------------ ------------------------------ -
+OWNER
+------------------------------
+PRODUCT                        PRODUCT_PK_P_CODE              P
+CS540
+
+
+13 rows selected.*/
+
+/*QUERY-2*/
+SELECT DISTINCT V_CODE,V_NAME FROM VENDOR,PART
+WHERE VENDOR.V_CODE=PART.S_CODE;
+
+/*V_CODE V_NAME
+---------- ------------------------------
+24288 Justin Stores
+21344 Gomez Sons
+24992 INDIAN MASTERS
+25595 HighEnd Supplies
+21225 Bryson, Inc.
+23119 Blackman Sisters
+21231 GnB Supply
+
+7 rows selected.*/
+
+
+SELECT VENDOR.V_CODE,V_NAME,P_PRICE FROM VENDOR,PRODUCT
+WHERE PRODUCT.QTY > 10 AND VENDOR.V_CODE=PRODUCT.V_CODE;
+/*
+V_CODE V_NAME P_PRICE
+---------- ------------------------------ ----------
+21344 Gomez Sons 14.99
+21344 Gomez Sons 17.49
+23119 Blackman Sisters 39.95
+23119 Blackman Sisters 43.99
+25595 HighEnd Supplies 38.95
+21225 Bryson, Inc. 9.95
+21344 Gomez Sons 4.99
+24288 Justin Stores 256.99
+21225 Bryson, Inc. 6.99
+21231 GnB Supply 8.45
+25595 HighEnd Supplies 119.95
+24992 INDIAN MASTERS 15.5
+24992 INDIAN MASTERS 125
+24992 INDIAN MASTERS 15.25
+
+14 rows selected.*/
+
+
+/*QUERY-3*/
+
+SELECT PT_CODE,PT_DESC,PT_PRICE
+FROM PART
+WHERE PT_PRICE=(SELECT MAX(PT_PRICE) AS Max_Price FROM PART) OR PT_PRICE=(SELECT
+MIN(PT_PRICE) AS Min_Price FROM PART )
+ORDER BY PT_PRICE DESC;
+
+/*PT_CODE PT_DESC PT_PRICE
+---------- -------------------- ----------
+HC100 Hicut Chain Saw 257
+RF100 Rat Tail File 5
+
+2 rows selected.*/
+
+
+SELECT P_CODE,DESCRIPT,P_PRICE
+FROM PRODUCT
+WHERE P_PRICE=(SELECT MAX(P_PRICE) AS Max_Price FROM PRODUCT ) OR P_PRICE=(SELECT
+MIN(P_PRICE) AS Min_Price FROM PRODUCT )
+ORDER BY P_PRICE DESC;
+
+/*
+
+P_COD DESCRIPT                          P_PRICE
+----- ------------------------------ ----------
+HC100 Hicut Chain Saw                    256.99
+RF100 Rat Tail File                        4.99*/
+
+
+
+/*QUERY-4*/
+
+SELECT P_CODE,P_PRICE,V_CODE FROM PRODUCT
+WHERE P_PRICE>(SELECT AVG(P_PRICE) FROM PRODUCT)
+ORDER BY P_PRICE DESC;
+/*
+P_CODE P_PRICE V_CODE
+-------- ---------- ----------
+HC100 256.99 24288
+AB111 125 24992
+SM48X 119.95 25595
+AB112 109.99 25595
+JB012 109.92 24288
+JB008 99.87 24288
+
+6 rows selected.*/
+
+SELECT COUNT(P_CODE),V_CODE FROM PRODUCT
+WHERE V_CODE IS NOT NULL
+GROUP BY V_CODE;
+/*
+COUNT(P_CODE) V_CODE
+------------- ----------
+3 25595
+2 23119
+3 24992
+1 21231
+2 21225
+3 24288
+3 21344
+
+7 rows selected.*/
+
+
+/*QUERY-5*/
+SELECT DISTINCT V_CODE, COUNT(P_CODE)
+FROM PRODUCT
+WHERE V_CODE IS NOT NULL AND QTY > 0
+GROUP BY V_CODE
+HAVING AVG(P_PRICE) < 10;
+
+/*
+V_CODE COUNT(P_CODE)
+---------- -------------
+21231 1
+21225 2
+2 rows selected.*/
+
+SELECT DISTINCT V_CODE, COUNT(P_CODE), SUM(P_PRICE*QTY) AS TOT_COST
+FROM PRODUCT
+WHERE V_CODE IS NOT NULL
+GROUP BY V_CODE
+HAVING SUM(P_PRICE*QTY) > 400
+ORDER BY TOT_COST ASC;
+/*
+V_CODE COUNT(P_CODE) TOT_COST
+---------- ------------- ----------
+21344 3 1009.07
+21225 2 1431.13
+23119 2 1611.02
+21231 1 2002.65
+25595 3 3506.42
+24992 3 3567.5
+24288 3 4305.47
+7 rows selected.
+
+*/
+
+
+/*QUERY-6*/
+
+CREATE VIEW PRODUCT_STATS AS
+(SELECT DISTINCT V_CODE, SUM(P_PRICE*QTY) AS TOT_COST, MAX(QTY) AS MX_QTY,MIN(QTY)
+AS MN_QTY, AVG(QTY) AS AV_QTY
+FROM PRODUCT
+WHERE V_CODE IS NOT NULL GROUP BY V_CODE);
+/*
+View created.
+*/
+
+SELECT * FROM PRODUCT_STATS;
+/*
+V_CODE TOT_COST MX_QTY MN_QTY AV_QTY
+---------- ---------- ---------- ---------- ----------
+25595 3506.42 18 8 12.6666667
+23119 1611.02 23 15 19
+24992 3567.5 60 15 41.6666667
+21231 2002.65 237 237 237
+21225 1431.13 172 23 97.5
+24288 4305.47 11 6 8.33333333
+21344 1009.07 43 18 31
+
+7 rows selected.
+*/
+
+
+/*QUERY-7*/
+SELECT C_CODE, BALANCE, SUM(PURCHASE_AMT) AS AGG_PURC_AMT
+FROM(
+(SELECT INV_NUM, C_CODE FROM INVOICE)
+NATURAL JOIN
+(SELECT INV_NUM, SUM(L_UNITS*L_PRICE) AS PURCHASE_AMT FROM LINE
+GROUP BY INV_NUM)
+NATURAL JOIN
+(SELECT C_CODE, BALANCE FROM CUSTOMER)
+)
+GROUP BY C_CODE, BALANCE;
+/*
+C_CODE BALANCE AGG_PURC_AMT
+---------- ---------- ------------
+10011 0 479.57
+10012 345.86 153.85
+10014 0 422.77
+10018 216.55 34.87
+10015 0 34.97
+10020 500 310
+
+6 rows selected.
+*/
+
+
+/*QUERY-8*/
+SELECT C_CODE, BALANCE, SUM(PURCHASE_AMT) AS AGG_PURC_AMT, SUM(PRD_PRCHS) AS
+TOT_PRD_PRCHS
+FROM(
+(SELECT INV_NUM, C_CODE FROM INVOICE)
+NATURAL JOIN
+(SELECT INV_NUM, SUM(L_PRICE) AS PURCHASE_AMT, MAX(L_NUM) AS PRD_PRCHS FROM LINE
+GROUP BY INV_NUM)
+NATURAL JOIN
+(SELECT C_CODE, BALANCE FROM CUSTOMER)
+)
+GROUP BY C_CODE, BALANCE ORDER BY C_CODE ASC;
+/*
+C_CODE BALANCE AGG_PURC_AMT TOT_PRD_PRCHS
+---------- ---------- ------------ -------------
+10011 0 146.63 5
+10012 345.86 93.89 3
+10014 0 408.79 6
+10015 0 19.98 2
+10018 216.55 14.94 2
+10020 500 15.5 1
+
+6 rows selected.
+*/
+
+/*QUERY-9*/
+
+SELECT * FROM
+(
+(SELECT INV_NUM FROM INVOICE)
+NATURAL JOIN
+(SELECT INV_NUM, SUM(L_UNITS*L_PRICE) AS INV_TOTAL FROM LINE
+GROUP BY INV_NUM)
+)
+ORDER BY INV_NUM ASC;
+/*
+INV_NUM INV_TOTAL
+---------- ----------
+1001 24.94
+1002 9.98
+1003 153.85
+1004 34.87
+1005 70.44
+1006 397.83
+1007 34.97
+1008 399.15
+1009 310
+9 rows selected.
+
+*/
+
+
+SELECT C_CODE, COUNT(INV_NUM), SUM(INV_TOTAL) AS TOT_PRCH_AMT FROM
+(
+(SELECT INV_NUM, C_CODE FROM INVOICE)
+NATURAL JOIN
+(SELECT INV_NUM, SUM(L_UNITS*L_PRICE) AS INV_TOTAL FROM LINE
+GROUP BY INV_NUM)
+)
+GROUP BY C_CODE
+ORDER BY C_CODE ASC;
+/*
+C_CODE COUNT(INV_NUM) TOT_PRCH_AMT
+---------- -------------- ------------
+10011 3 479.57
+10012 1 153.85
+10014 2 422.77
+10015 1 34.97
+10018 1 34.87
+10020 1 310
+6 rows selected.
+*/
+
+SELECT * FROM
+(
+(SELECT INV_NUM, C_CODE FROM INVOICE)
+NATURAL JOIN
+(SELECT INV_NUM, SUM(L_UNITS*L_PRICE) AS INV_TOTAL FROM LINE
+GROUP BY INV_NUM)
+)
+ORDER BY INV_NUM ASC;
+/*
+INV_NUM C_CODE INV_TOTAL
+---------- ---------- ----------
+1001 10014 24.94
+1002 10011 9.98
+1003 10012 153.85
+
+1004 10018 34.87
+1005 10011 70.44
+1006 10014 397.83
+1007 10015 34.97
+1008 10011 399.15
+1009 10020 310
+9 rows selected.
+*/
+
+
+/*QUERY-10*/
+
+SELECT * FROM
+(
+(SELECT C_CODE FROM CUSTOMER)
+MINUS
+(SELECT C_CODE FROM INVOICE)
+)
+NATURAL JOIN(SELECT C_CODE, BALANCE FROM CUSTOMER);
+/*
+C_CODE BALANCE
+---------- ----------
+10010 0
+10013 536.75
+10016 221.19
+10017 768.93
+10019 0
+5 rows selected.
+*/
+SELECT MIN(BALANCE) AS MIN_BAL,MAX(BALANCE) AS MAX_BAL,AVG(BALANCE) AS AVG_BAL
+FROM CUSTOMER NATURAL JOIN INVOICE;
+/*
+MIN_BAL MAX_BAL AVG_BAL
+---------- ---------- ----------
+0 500 118.045556
+1 row selected.
+*/
+
+
+/*QUERY -11*/
+CREATE TABLE INV_CUSTOMER AS
+(SELECT INV_NUM AS QUOTE_ID, INV_DATE AS QUOTE_DT, FNAME||' '||LNAME AS C_NAME
+FROM INVOICE I, CUSTOMER C
+WHERE I.C_CODE = C.C_CODE AND 'Y'='N');
+/*
+Table created.
+*/
+SELECT * FROM INV_CUSTOMER;
+no rows selected
+ALTER TABLE INV_CUSTOMER
+ADD CONSTRAINT INV_CUSTOMER_PK_QUOTE_ID PRIMARY KEY(QUOTE_ID);
+
+/*Table altered.*/
+INSERT INTO INV_CUSTOMER
+(SELECT INV_NUM, INV_DATE, FNAME||' '||LNAME
+FROM INVOICE I, CUSTOMER C
+WHERE I.C_CODE = C.C_CODE);
+
+/*9 rows created.*/
+SELECT * FROM INV_CUSTOMER;
+
+/*QUOTE_ID QUOTE_DT C_NAME
+---------- --------- ---------------------
+1005 17-JAN-20 Elena Johnson
+1008 17-JAN-20 Elena Johnson
+1002 16-JAN-20 Elena Johnson
+1003 16-JAN-20 Kathy Smith
+1006 17-JAN-20 Bill Johnson
+1001 16-JAN-20 Bill Johnson
+1007 17-JAN-20 Julia Samuels
+1004 17-JAN-20 Ming Lee
+1009 22-JAN-20 ATHARVA PALIWAL
+*/
+
+/*9 rows selected.*/
+
+
+/*QUERY-12*/
+CREATE VIEW INV_CUSTOMER_VW AS
+(SELECT INV_NUM AS QUOTE_ID, INV_DATE AS QUOTE_DT, FNAME||' '||LNAME AS C_NAME
+FROM INVOICE I, CUSTOMER C
+WHERE I.C_CODE = C.C_CODE AND 'Y'='N');
+/*
+View created.
+*/
+INSERT INTO INV_CUSTOMER_VW
+(SELECT INV_NUM, INV_DATE, FNAME||' '||LNAME
+FROM INVOICE I, CUSTOMER C
+WHERE I.C_CODE = C.C_CODE);
+/*
+INSERT INTO INV_CUSTOMER_VW
+*
+ERROR at line 1:
+ORA-01733: virtual column not allowed here
+*/
+CREATE OR REPLACE VIEW INV_CUSTOMER_VW AS
+(SELECT INV_NUM AS QUOTE_ID, INV_DATE AS QUOTE_DT, FNAME||' '||LNAME AS C_NAME
+FROM INVOICE I, CUSTOMER C
+WHERE I.C_CODE = C.C_CODE);
+/*
+View created.
+*/
+SELECT * FROM INV_CUSTOMER_VW;
+/*
+QUOTE_ID QUOTE_DT C_NAME
+---------- --------- ---------------------
+1005 17-JAN-20 Elena Johnson
+1008 17-JAN-20 Elena Johnson
+1002 16-JAN-20 Elena Johnson
+1003 16-JAN-20 Kathy Smith
+1006 17-JAN-20 Bill Johnson
+1001 16-JAN-20 Bill Johnson
+1007 17-JAN-20 Julia Samuels
+1004 17-JAN-20 Ming Lee
+1009 22-JAN-20 ATHARVA PALIWAL
+9 rows selected.
+*/
+INSERT INTO INV_CUSTOMER_VW
+VALUES(1011, '12-MAR-2020', 'Jagat Narayan');
+/*
+INSERT INTO INV_CUSTOMER_VW
+*
+ERROR at line 1:
+ORA-01733: virtual column not allowed here
+*/
+INSERT INTO PRODUCT(P_CODE,DESCRIPT,P_DATE,QTY,P_MIN,P_PRICE)
+VALUES('SH200','Sledge Hammer','05-JUL-2020',10,3,25.8);
+/*
+1 row created.
+*/
+INSERT INTO PRODUCT(P_CODE,DESCRIPT,P_DATE,QTY,P_MIN,P_PRICE)
+VALUES('ZZ999','Cordless Drill','10-JUL-2020',200,40,25.5);
+
+/*1 row created.*/
+INSERT INTO PRODUCT(P_CODE,DESCRIPT,P_DATE,QTY,P_MIN,P_PRICE,V_CODE)
+VALUES('AB212','Power Painter','03-AUG-2020',15,3,275.0,24992);
+/*1 row created.*/
+
+
+/*QUERY-13*/
+SELECT * FROM
+(SELECT DISTINCT V_CODE FROM PRODUCT
+WHERE V_CODE IS NOT NULL)
+NATURAL JOIN
+(SELECT V_CODE, V_NAME FROM VENDOR);
+/*
+V_CODE V_NAME
+---------- ------------------------------
+24288 Justin Stores
+25595 HighEnd Supplies
+21225 Bryson, Inc.
+21231 GnB Supply
+24992 INDIAN MASTERS
+21344 Gomez Sons
+23119 Blackman Sisters
+7 rows selected.
+*/
+
+
+/*QUERY-14*/
+SELECT * FROM
+(SELECT AVG(P_PRICE) FROM PRODUCT);
+/*
+AVG(P_PRICE)
+------------
+62.945
+1 row selected.
+*/
+
+SELECT * FROM
+(SELECT DESCRIPT, AVG(P_PRICE) FROM PRODUCT
+GROUP BY DESCRIPT);
+
+/*
+DESCRIPT AVG(P_PRICE)
+------------------------------ ------------
+Hrd. Spring 1/4in 39.95
+Hicut Chain Saw 256.99
+7.25in Saw Blade 14.99
+9.00 in Saw Blade 17.49
+Hrd. Spring 1/2in 43.99
+Jigsaw 12in Blade 109.92
+Jigsaw 8in Blade 99.87
+Metal Screw 6.99
+2.5in wide Screw 8.45
+Rat Tail File 4.99
+Sledge Hammer 20.1
+PVC Pipe 10.56
+Power Painter 275
+Power Drill 117.495
+Claw Hammer 9.95
+Steel Malting Mesh 119.95
+HiVeld Hammer 15.5
+Cordless Drill 32.225
+18 rows selected.
+
+*/
+
+
+/*QUERY-15*/
+SELECT P_CODE, DESCRIPT, P_PRICE
+FROM PRODUCT
+WHERE P_PRICE >= (SELECT AVG(P_PRICE) FROM PRODUCT);
+/*
+P_COD DESCRIPT P_PRICE
+----- ------------------------------ ----------
+AB112 Power Drill 109.99
+JB012 Jigsaw 12in Blade 109.92
+JB008 Jigsaw 8in Blade 99.87
+HC100 Hicut Chain Saw 256.99
+SM48X Steel Malting Mesh 119.95
+AB111 Power Drill 125
+AB212 Power Painter 275
+7 rows selected.
+
+*/
+
+
+/*QUERY-16*/
+
+SELECT * FROM
+(
+(SELECT V_CODE FROM VENDOR)
+MINUS
+(SELECT V_CODE FROM PRODUCT)
+)NATURAL JOIN
+(SELECT V_CODE, V_NAME, V_CONTACT FROM VENDOR);
+/*
+V_CODE V_NAME V_CONTACT
+---------- ------------------------------ --------------------
+21226 SuperLoo, Inc. Ching Ming
+22587 Downing, Inc. Simon Singh
+24004 Almeda House Almeda Brown
+25443 Super Systems Ted Hwang
+25501 Silvermines Ltd. Anne White
+5 rows selected.
+
+*/
+
+
+/*QUERY-17*/
+
+UPDATE PRODUCT
+SET P_PRICE = (SELECT AVG(P_PRICE) FROM PRODUCT)
+WHERE V_CODE IN (SELECT V_CODE FROM VENDOR WHERE V_STATE NOT IN ('TN','KY'));
+/*
+5 rows updated.
+*/
+INSERT INTO LINE VALUES(1003,4,'ZZ999',10,25.5);
+
+/*1 row created.
+*/
+
+SELECT * FROM LINE;
+/*
+INV_NUM L_NUM P_COD L_UNITS L_PRICE
+---------- ---------- ----- ---------- ----------
+1001 1 SB725 1 14.99
+1001 2 CH10X 1 9.95
+1002 1 RF100 2 4.99
+1003 1 CD00X 1 38.95
+1003 2 CD00X 1 39.95
+1003 3 SB725 5 14.99
+1004 1 RF100 3 4.99
+1004 2 CH10X 2 9.95
+1005 1 PP101 12 5.87
+1006 1 MC001 3 6.99
+1006 2 JB012 1 109.92
+1006 3 CH10X 1 9.95
+1006 4 HC100 1 256.99
+1007 1 SB725 2 14.99
+1007 2 RF100 1 4.99
+1008 1 PP101 5 5.87
+1008 2 SM48X 3 119.95
+1008 3 CH10X 1 9.95
+1009 1 HW15X 20 15.5
+1003 4 ZZ999 10 25.5
+20 rows selected.
+*/
+
+
+/*QUERY-18*/
+SELECT DISTINCT C_CODE, FNAME, LNAME, DESCRIPT FROM
+(
+(SELECT INV_NUM, P_CODE FROM LINE)
+NATURAL JOIN
+(SELECT P_CODE, DESCRIPT FROM PRODUCT
+
+WHERE UPPER(DESCRIPT) LIKE '%BLADE%')
+NATURAL JOIN
+(SELECT INV_NUM, C_CODE FROM INVOICE)
+NATURAL JOIN
+(SELECT C_CODE, FNAME, LNAME FROM CUSTOMER)
+);
+/*
+C_CODE FNAME LNAME DESCRIPT
+---------- ---------- ---------- ------------------------------
+10015 Julia Samuels 7.25in Saw Blade
+10014 Bill Johnson 7.25in Saw Blade
+10012 Kathy Smith 7.25in Saw Blade
+10014 Bill Johnson Jigsaw 12in Blade
+4 rows selected.
+*/
+SELECT DISTINCT C_CODE, FNAME, LNAME, DESCRIPT FROM
+(
+(SELECT INV_NUM, P_CODE FROM LINE)
+NATURAL JOIN
+(SELECT P_CODE, DESCRIPT FROM PRODUCT
+WHERE DESCRIPT = 'Power Drill')
+NATURAL JOIN
+(SELECT INV_NUM, C_CODE FROM INVOICE)
+NATURAL JOIN
+(SELECT C_CODE, FNAME, LNAME FROM CUSTOMER)
+);
+
+/*no rows selected*/
+
+
+
+
+
+/*QUERY-19*/
+SELECT C_CODE,FNAME,LNAME
+FROM CUSTOMER
+WHERE C_CODE IN
+(SELECT DISTINCT(C_CODE) FROM
+CUSTOMER NATURAL JOIN PRODUCT NATURAL JOIN LINE NATURAL JOIN INVOICE
+WHERE DESCRIPT LIKE '%Hammer'
+OR DESCRIPT LIKE '%Saw%'
+OR DESCRIPT LIKE '%Drill');
+/*
+C_CODE FNAME LNAME
+---------- ---------- ----------
+10018 Ming Lee
+10014 Bill Johnson
+10020 ATHARVA PALIWAL
+10012 Kathy Smith
+
+10015 Julia Samuels
+10011 Elena Johnson
+6 rows selected.
+
+*/
+
+
+
+
+/*QUERY-20*/
+SELECT * FROM
+(
+(SELECT P_CODE, SUM(L_UNITS) AS UNITS_SOLD FROM LINE
+GROUP BY P_CODE)
+)
+WHERE UNITS_SOLD > (SELECT AVG(L_UNITS) FROM LINE);
+/*
+P_COD UNITS_SOLD
+----- ----------
+SB725 8
+ZZ999 10
+RF100 6
+CH10X 5
+PP101 17
+HW15X 20
+6 rows selected.
+
+*/
+
+/*QUERY-21*/
+SELECT C_CODE, FNAME, LNAME
+FROM CUSTOMER
+WHERE C_CODE IN (
+SELECT C_CODE
+FROM INVOICE
+WHERE INV_NUM IN (
+SELECT IP1.INV_NUM
+FROM
+(SELECT INV_NUM, P_CODE
+FROM LINE
+WHERE P_CODE IN ('HC100', 'JB012')) IP1
+JOIN
+(SELECT INV_NUM, P_CODE
+FROM LINE
+WHERE P_CODE IN ('HC100', 'JB012')) IP2
+ON IP1.INV_NUM = IP2.INV_NUM AND IP1.P_CODE <> IP2.P_CODE
+)
+);
+/*
+C_CODE FNAME LNAME
+---------- ---------- ----------
+10014 Bill Johnson
+1 row selected.
+
+
+*/
+
+
+
+/*QUERY-22*/
+SELECT P_CODE, P_PRICE, (P_PRICE - P_AVG_PRICE) AS P_AVG_PRICE_DIFF, P_AVG_PRICE
+FROM
+PRODUCT, (SELECT AVG(P_PRICE) AS P_AVG_PRICE FROM PRODUCT);
+/*
+P_COD P_PRICE P_AVG_PRICE_DIFF P_AVG_PRICE
+----- ---------- ---------------- -----------
+AB112 62.95 1.73590909 61.2140909
+SB725 14.99 -46.224091 61.2140909
+SB900 17.49 -43.724091 61.2140909
+CL025 62.95 1.73590909 61.2140909
+CL050 62.95 1.73590909 61.2140909
+JB012 109.92 48.7059091 61.2140909
+JB008 99.87 38.6559091 61.2140909
+CD00X 62.95 1.73590909 61.2140909
+CH10X 9.95 -51.264091 61.2140909
+SH100 14.4 -46.814091 61.2140909
+RF100 4.99 -56.224091 61.2140909
+HC100 256.99 195.775909 61.2140909
+PP101 5.87 -55.344091 61.2140909
+MC001 6.99 -54.224091 61.2140909
+WC025 8.45 -52.764091 61.2140909
+SM48X 62.95 1.73590909 61.2140909
+HW15X 15.5 -45.714091 61.2140909
+AB111 125 63.7859091 61.2140909
+PP102 15.25 -45.964091 61.2140909
+SH200 25.8 -35.414091 61.2140909
+ZZ999 25.5 -35.714091 61.2140909
+AB212 275 213.785909 61.2140909
+22 rows selected.
+
+
+*/
+
+
+/*QUERY-23*/
+SELECT P_CODE, SUM(L_UNITS) AS TOT_UNITS_SOLD, SUM(L_UNITS*L_PRICE)
+AS TOT_UNITS_SOLD_VALUE, AVG(L_UNITS*L_PRICE)
+FROM LINE
+GROUP BY P_CODE
+HAVING SUM(L_UNITS*L_PRICE) > AVG(L_UNITS*L_PRICE);
+/*
+P_COD TOT_UNITS_SOLD TOT_UNITS_SOLD_VALUE AVG(L_UNITS*L_PRICE)
+----- -------------- -------------------- --------------------
+SB725 8 119.92 39.9733333
+RF100 6 29.94 9.98
+CD00X 2 78.9 39.45
+CH10X 5 49.75 12.4375
+PP101 17 99.79 49.895
+5 rows selected.
+*/
+
+
+
+
+
+/*QUERY-24*/
+SELECT C_CODE, LNAME, FNAME
+FROM CUSTOMER
+WHERE EXISTS (
+SELECT INV_NUM
+FROM INVOICE
+WHERE INVOICE.C_CODE = CUSTOMER.C_CODE
+);
+/*
+C_CODE LNAME FNAME
+---------- ---------- ----------
+10011 Johnson Elena
+10012 Smith Kathy
+10014 Johnson Bill
+10015 Samuels Julia
+10018 Lee Ming
+10020 PALIWAL ATHARVA
+6 rows selected.
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
